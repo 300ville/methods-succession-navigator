@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tax Method Decision Tool</title>
+  <style>
+    :root {
+      --bg: #ffffff;
+      --ink: #111111;
+      --muted: #666666;
+      --line: #d7d7d7;
+      --soft-line: #eeeeee;
+      --gold: #a77a24;
+      --gold-bg: #f6efe2;
+      --black: #111111;
+      --white: #ffffff;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: Inter, "Helvetica Neue", Arial, sans-serif;
+      font-size: 14px;
+      line-height: 1.4;
+    }
+
+    button, input, select { font: inherit; }
+
+    .page {
+      width: min(1040px, calc(100vw - 48px));
+      margin: 0 auto;
+      min-height: 100vh;
+      display: grid;
+      align-content: center;
+      padding: 48px 0;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      gap: 24px;
+      align-items: center;
+      padding-bottom: 18px;
+      border-bottom: 1px solid var(--line);
+      margin-bottom: 44px;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .nav-links a {
+      color: var(--ink);
+      text-decoration: none;
+      border-bottom: 1px solid var(--gold);
+      padding-bottom: 2px;
+    }
+
+    .nav-links a:hover {
+      color: var(--gold);
+    }
+
+    .brand {
+      color: var(--gold);
+      font-weight: 700;
+    }
+
+    .progress { color: var(--muted); }
+
+    .panel {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 28px;
+    }
+
+    .question { max-width: 840px; }
+
+    .eyebrow {
+      color: var(--gold);
+      margin-bottom: 12px;
+      font-weight: 700;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(36px, 5vw, 66px);
+      line-height: 0.98;
+      letter-spacing: -0.055em;
+      font-weight: 720;
+    }
+
+    .help {
+      margin: 18px 0 0;
+      max-width: 760px;
+      color: var(--muted);
+    }
+
+    .choices {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin-top: 6px;
+    }
+
+    .choice {
+      border: 1px solid var(--line);
+      background: var(--white);
+      color: var(--ink);
+      text-align: left;
+      padding: 20px;
+      min-height: 112px;
+      cursor: pointer;
+      transition: 120ms ease;
+    }
+
+    .choice:hover {
+      border-color: var(--ink);
+      background: #fafafa;
+    }
+
+    .choice-title {
+      display: block;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .choice-note {
+      display: block;
+      color: var(--muted);
+    }
+
+    .history {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      min-height: 32px;
+    }
+
+    .crumb {
+      border: 1px solid var(--line);
+      background: #fff;
+      padding: 6px 9px;
+      color: var(--muted);
+    }
+
+    .result {
+      border-top: 2px solid var(--ink);
+      padding-top: 24px;
+      display: none;
+    }
+
+    .result.visible { display: block; }
+
+    .result-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      margin-top: 20px;
+    }
+
+    .answer-box,
+    .diagnostic-box {
+      border: 1px solid var(--line);
+      padding: 18px;
+      background: #fff;
+    }
+
+    .diagnostic-box { margin-top: 18px; }
+
+    .answer-box h2,
+    .diagnostic-box h2 {
+      margin: 0 0 10px;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--gold);
+    }
+
+    .answer-main {
+      margin: 0;
+      font-size: 24px;
+      line-height: 1.15;
+      letter-spacing: -0.025em;
+      font-weight: 720;
+    }
+
+    .answer-text {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .diagnostic-list {
+      margin: 0;
+      padding-left: 18px;
+      color: var(--muted);
+    }
+
+    .diagnostic-list li + li { margin-top: 7px; }
+
+    .actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 26px;
+    }
+
+    .btn {
+      border: 1px solid var(--ink);
+      background: var(--ink);
+      color: #fff;
+      padding: 10px 14px;
+      cursor: pointer;
+    }
+
+    .btn.secondary {
+      background: #fff;
+      color: var(--ink);
+    }
+
+    .footnote {
+      margin-top: 32px;
+      color: var(--muted);
+      font-size: 12px;
+      border-top: 1px solid var(--soft-line);
+      padding-top: 14px;
+    }
+
+    .summary-section {
+      margin-top: 72px;
+      padding-top: 28px;
+      border-top: 2px solid var(--ink);
+    }
+
+    .summary-header {
+      display: grid;
+      grid-template-columns: 1fr 360px;
+      gap: 28px;
+      align-items: end;
+      margin-bottom: 22px;
+    }
+
+    .summary-header h2 {
+      margin: 0;
+      font-size: clamp(28px, 3vw, 44px);
+      line-height: 1;
+      letter-spacing: -0.04em;
+      font-weight: 720;
+    }
+
+    .summary-header p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .summary-table-wrap {
+      overflow-x: auto;
+      border-top: 1px solid var(--ink);
+    }
+
+    .summary-table {
+      width: 100%;
+      min-width: 1180px;
+      border-collapse: collapse;
+      table-layout: fixed;
+    }
+
+    .summary-table th,
+    .summary-table td {
+      text-align: left;
+      vertical-align: top;
+      border-bottom: 1px solid var(--line);
+      padding: 13px 12px;
+    }
+
+    .summary-table th {
+      border-bottom: 2px solid var(--ink);
+      font-weight: 700;
+      color: var(--ink);
+      background: #fff;
+    }
+
+    .summary-table .group-row td {
+      background: var(--ink);
+      color: #fff;
+      border-bottom: none;
+      font-weight: 700;
+    }
+
+    .summary-table .transaction-cell {
+      font-weight: 700;
+    }
+
+    .summary-table .rule-cell {
+      color: var(--gold);
+      white-space: nowrap;
+      font-weight: 700;
+    }
+
+    .summary-table .answer-cell {
+      font-weight: 700;
+    }
+
+    .summary-table .muted-cell {
+      color: var(--muted);
+    }
+
+    @media (max-width: 760px) {
+      .page {
+        width: min(100vw - 28px, 1040px);
+        align-content: start;
+        padding-top: 28px;
+      }
+
+      .topbar,
+      .choices,
+      .result-grid,
+      .summary-header {
+        grid-template-columns: 1fr;
+      }
+
+      .topbar {
+        display: grid;
+        margin-bottom: 28px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <div class="topbar">
+      <div class="brand">Method Consequence Navigator</div>
+      <div class="nav-links">
+        <a href="#summaryTable">Summary table</a>
+        <div class="progress" id="progress">Question 1</div>
+      </div>
+    </div>
+
+    <section class="panel" id="questionPanel">
+      <div class="history" id="history"></div>
+
+      <div class="question">
+        <div class="eyebrow" id="eyebrow">Start</div>
+        <h1 id="questionText">Whose method consequence are you analyzing?</h1>
+        <p class="help" id="helpText">Start with the taxpayer or entity whose accounting method result matters. The same transaction can have different answers for seller, buyer, target, old target, new target, and acquirer.</p>
+      </div>
+
+      <div class="choices" id="choices"></div>
+
+      <section class="result" id="result">
+        <div class="question">
+          <div class="eyebrow">Method answer</div>
+          <h1 id="resultTitle">Same methods continue.</h1>
+        </div>
+
+        <div class="result-grid">
+          <div class="answer-box">
+            <h2>What happens</h2>
+            <p class="answer-main" id="whatHappens">The accounting methods continue.</p>
+          </div>
+          <div class="answer-box">
+            <h2>What to model</h2>
+            <p class="answer-text" id="whatToModel">No additional modeling selected.</p>
+          </div>
+          <div class="answer-box">
+            <h2>Rule</h2>
+            <p class="answer-text" id="rule">Rule not selected.</p>
+          </div>
+          <div class="answer-box">
+            <h2>Practical point</h2>
+            <p class="answer-text" id="practicalPoint">No practical point selected.</p>
+          </div>
+        </div>
+
+        <div class="diagnostic-box">
+          <h2>Check next</h2>
+          <ol class="diagnostic-list" id="checkNext"></ol>
+        </div>
+
+        <div class="actions">
+          <button class="btn secondary" id="backBtn">Back</button>
+          <button class="btn" id="restartBtn">Start over</button>
+        </div>
+      </section>
+    </section>
+
+    <section class="summary-section" id="summaryTable" aria-label="Summary table">
+      <div class="summary-header">
+        <h2>Summary table</h2>
+        <p>Same conclusions as the navigator, shown in table form for users who already know the transaction and want to scan the method result.</p>
+      </div>
+
+      <div class="summary-table-wrap">
+        <table class="summary-table">
+          <thead>
+            <tr>
+              <th style="width: 18%;">Transaction / posture</th>
+              <th style="width: 10%;">Rule</th>
+              <th style="width: 21%;">Method answer</th>
+              <th style="width: 28%;">What to model</th>
+              <th style="width: 23%;">Check next</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="group-row"><td colspan="5">Stock transactions</td></tr>
+            <tr>
+              <td class="transaction-cell">Seller stock sale</td>
+              <td class="rule-cell">§1001</td>
+              <td class="answer-cell">Same methods continue.</td>
+              <td class="muted-cell">Short-year timing if the target enters or leaves a consolidated group. Any planned Form 3115 before closing.</td>
+              <td class="muted-cell">Consolidated group entry or exit. Pre-closing Form 3115. Deferred revenue, prepaids, compensation, inventory, and long-term contracts.</td>
+            </tr>
+            <tr>
+              <td class="transaction-cell">Buyer stock purchase</td>
+              <td class="rule-cell">§1012; §446(e)</td>
+              <td class="answer-cell">Buyer gets the target’s methods.</td>
+              <td class="muted-cell">Post-closing method changes, §481(a), audit protection, and conformity with buyer group methods.</td>
+              <td class="muted-cell">Impermissible or unfavorable methods. Consolidated group entry or exit. Prior, pending, or needed Form 3115 filings.</td>
+            </tr>
+
+            <tr class="group-row"><td colspan="5">Asset transactions</td></tr>
+            <tr>
+              <td class="transaction-cell">Seller asset sale</td>
+              <td class="rule-cell">§1001; §1060</td>
+              <td class="answer-cell">Seller may trigger income or lose deductions.</td>
+              <td class="muted-cell">Deferred revenue, assumed liabilities, long-term contracts, unripe deductions, and any prior §481(a) spread.</td>
+              <td class="muted-cell">Whether seller is relieved of performance. Which liabilities are assumed or retained. Whether seller liquidates or ceases the business.</td>
+            </tr>
+            <tr>
+              <td class="transaction-cell">Buyer asset purchase</td>
+              <td class="rule-cell">§1060</td>
+              <td class="answer-cell">Buyer usually adopts methods for the acquired assets.</td>
+              <td class="muted-cell">Purchase price allocation, assumed liabilities, inventory, depreciation, and deferred revenue obligations.</td>
+              <td class="muted-cell">Opening tax balance sheet. Deferred revenue, contingent liabilities, long-term contracts, inventory, depreciation, capitalization, and revenue methods.</td>
+            </tr>
+
+            <tr class="group-row"><td colspan="5">§338(h)(10)</td></tr>
+            <tr>
+              <td class="transaction-cell">Old target / seller side</td>
+              <td class="rule-cell">§338(h)(10)</td>
+              <td class="answer-cell">Old target has sale-side consequences.</td>
+              <td class="muted-cell">Deferred revenue, assumed liabilities, long-term contracts, asset gain or loss, and seller-side §481(a) issues.</td>
+              <td class="muted-cell">Deferred revenue, contingent liabilities, long-term contracts, deemed sale or liquidation acceleration, S corporation or consolidated group seller issues.</td>
+            </tr>
+            <tr>
+              <td class="transaction-cell">New target / buyer side</td>
+              <td class="rule-cell">§338(h)(10)</td>
+              <td class="answer-cell">New target usually adopts new methods.</td>
+              <td class="muted-cell">Revenue methods, inventory, depreciation, gross receipts tests, assumed liabilities, and deferred revenue obligations.</td>
+              <td class="muted-cell">Valid election. New target method adoption. Deferred revenue obligations and liabilities affecting income, basis, or cost-to-perform.</td>
+            </tr>
+
+            <tr class="group-row"><td colspan="5">§351 transfers</td></tr>
+            <tr>
+              <td class="transaction-cell">§351 transferor</td>
+              <td class="rule-cell">§351</td>
+              <td class="answer-cell">Tax-free transfer can still trigger method items.</td>
+              <td class="muted-cell">Deferred revenue, liability deductions, final-year Form 3115 limits, and positive §481(a) acceleration.</td>
+              <td class="muted-cell">Substantially all assets or business cessation. Transferor obligations. Existing §481(a) spreads or blocked method changes.</td>
+            </tr>
+            <tr>
+              <td class="transaction-cell">§351 transferee</td>
+              <td class="rule-cell">§351; §446</td>
+              <td class="answer-cell">Transferee generally adopts methods, but not for every item.</td>
+              <td class="muted-cell">Carryover basis, LIFO, long-term contracts, receivables, payables, supplies, and prepaids.</td>
+              <td class="muted-cell">Carryover basis or step-in-the-shoes treatment. LIFO, long-term contracts, receivables, and payables. New or existing transferee methods.</td>
+            </tr>
+
+            <tr class="group-row"><td colspan="5">§381 and consolidated groups</td></tr>
+            <tr>
+              <td class="transaction-cell">§381 applies</td>
+              <td class="rule-cell">§381(c)(4), (5)</td>
+              <td class="answer-cell">§381 tells you which method survives.</td>
+              <td class="muted-cell">Same methods, different methods, separate businesses, integrated businesses, inventory methods, and §481(a).</td>
+              <td class="muted-cell">Separate or integrated businesses. Same or different methods. Inventory methods. Impermissible inherited or continued methods.</td>
+            </tr>
+            <tr>
+              <td class="transaction-cell">§381 not confirmed</td>
+              <td class="rule-cell">§381</td>
+              <td class="answer-cell">§381 may not apply.</td>
+              <td class="muted-cell">Identify the actual transaction form and route through stock, asset, §338, §351, or another applicable path.</td>
+              <td class="muted-cell">Specific Code provision. Exclusions from §381. Whether stock, asset, §338, or §351 analysis is more appropriate.</td>
+            </tr>
+            <tr>
+              <td class="transaction-cell">Consolidated group entry or exit</td>
+              <td class="rule-cell">Reg. §1.1502-76</td>
+              <td class="answer-cell">Short-year and allocation rules may control timing.</td>
+              <td class="muted-cell">Closing-of-the-books, ratable allocation, extraordinary items, deferred revenue, prepaids, compensation, and §481(a).</td>
+              <td class="muted-cell">Group entry or exit. Allocation method. §481(a) adjustments or other extraordinary items.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <div class="footnote">Working decision tool. Confirm transaction documents, method history, and applicable authority before using in advice.</div>
+  </main>
+
+  <script>
+    const answers = {
+      sellerStock: {
+        title: "Same methods continue.",
+        what: "The stock sale does not change the target’s accounting methods.",
+        model: "Short-year timing if the target enters or leaves a consolidated group. Any planned Form 3115 before closing.",
+        rule: "§1001. No asset purchase. No §381 succession event.",
+        point: "The seller’s method work happens before closing: fix bad methods, preserve good methods, or obtain audit protection.",
+        checks: [
+          "Will the target enter or leave a consolidated group?",
+          "Are any Form 3115 filings planned or pending before closing?",
+          "Are there deferred revenue, prepaids, compensation accruals, inventory, or long-term contracts that short-year timing could affect?"
+        ]
+      },
+      buyerStock: {
+        title: "Buyer gets the target’s methods.",
+        what: "The target keeps its existing methods because the same corporation continues.",
+        model: "Post-closing method changes, §481(a), audit protection, and conformity with the buyer group.",
+        rule: "§1012 and §446(e). Same taxpayer continues. Later changes generally require consent.",
+        point: "The buyer does not get a clean slate. Diligence should identify methods to keep, fix, or change.",
+        checks: [
+          "Are any target methods impermissible, unfavorable, or inconsistent with buyer methods?",
+          "Will the target enter or leave a consolidated group?",
+          "Are there prior, pending, or needed Form 3115 filings?"
+        ]
+      },
+      sellerAssets: {
+        title: "Seller may trigger income or lose deductions.",
+        what: "The asset sale can end performance duties, move liabilities, or dispose of contracts.",
+        model: "Deferred revenue, assumed liabilities, long-term contracts, unripe deductions, and any prior §481(a) spread.",
+        rule: "§1001 and §1060. Seller recognizes gain or loss asset by asset.",
+        point: "The key issue is whether the sale accelerates ordinary income or strands deductions.",
+        checks: [
+          "Is the seller relieved of any deferred revenue performance obligation?",
+          "Which liabilities are assumed, retained, fixed, contingent, or paid later?",
+          "Will the seller liquidate or otherwise cease the business after closing?"
+        ]
+      },
+      buyerAssets: {
+        title: "Buyer usually adopts methods for the acquired assets.",
+        what: "The buyer applies methods prospectively to the acquired assets, subject to item-specific rules.",
+        model: "Purchase price allocation, assumed liabilities, inventory, depreciation, and deferred revenue obligations.",
+        rule: "§1060. Asset buyer starts from purchased asset basis.",
+        point: "Set up the opening tax balance sheet correctly. Do not assume every acquired item gets the same treatment.",
+        checks: [
+          "What assets and liabilities are on the opening tax balance sheet?",
+          "Are there deferred revenue obligations, contingent liabilities, or long-term contracts?",
+          "Are inventory, depreciation, capitalization, or revenue methods being adopted for the acquired business?"
+        ]
+      },
+      oldTarget338: {
+        title: "Old target has sale-side consequences.",
+        what: "Old target is treated as selling its assets and then liquidating for tax purposes.",
+        model: "Deferred revenue, assumed liabilities, long-term contracts, asset gain or loss, and seller-side §481(a) issues.",
+        rule: "§338(h)(10). Old target is treated as selling assets in the deemed asset sale.",
+        point: "Do not use the new target method-reset answer for old target. Old target is on the sale side.",
+        checks: [
+          "Does old target have deferred revenue, contingent liabilities, or long-term contracts?",
+          "Will the deemed sale or liquidation accelerate any income, deductions, or §481(a) amounts?",
+          "Is the seller an S corporation shareholder group or consolidated group member requiring separate seller-side analysis?"
+        ]
+      },
+      newTarget338: {
+        title: "New target usually adopts new methods.",
+        what: "New target is treated as buying the assets and can generally adopt permissible methods.",
+        model: "Revenue methods, inventory, depreciation, gross receipts tests, assumed liabilities, and deferred revenue obligations.",
+        rule: "§338(h)(10). Deemed asset sale and deemed asset purchase.",
+        point: "Treat this as a buyer-side method reset, while separately modeling old target’s sale-side triggers.",
+        checks: [
+          "Was the §338(h)(10) election valid and within scope?",
+          "What methods should new target adopt for revenue, inventory, depreciation, and capitalization?",
+          "Are there deferred revenue obligations or liabilities that affect income, basis, or cost-to-perform analysis?"
+        ]
+      },
+      transferor351: {
+        title: "Tax-free transfer can still trigger method items.",
+        what: "Nonrecognition does not protect deferred revenue, transferred liabilities, or existing §481(a) spreads.",
+        model: "Deferred revenue, liability deductions, final-year Form 3115 limits, and positive §481(a) acceleration.",
+        rule: "§351. Nonrecognition transaction with separate method consequences.",
+        point: "Fix bad methods before the transfer year if possible.",
+        checks: [
+          "Did the transferor transfer substantially all assets or cease the trade or business?",
+          "Does the transferor remain obligated on deferred revenue or liabilities?",
+          "Are there existing §481(a) spreads or method changes that could be blocked in the final year?"
+        ]
+      },
+      transferee351: {
+        title: "Transferee generally adopts methods, but not for every item.",
+        what: "Overall methods generally do not carry over, but certain items keep tax history.",
+        model: "Carryover basis, LIFO, long-term contracts, receivables, payables, supplies, and prepaids.",
+        rule: "§351 and §446. Initial adoption applies except where specific carryover or step-in-the-shoes rules control.",
+        point: "Separate clean-adoption items from step-in-the-shoes items.",
+        checks: [
+          "Which assets have carryover basis or statutory step-in-the-shoes treatment?",
+          "Are LIFO inventories, long-term contracts, or receivables and payables included?",
+          "Is the transferee newly formed or already using methods for similar items?"
+        ]
+      },
+      section381NotCovered: {
+        title: "§381 may not apply.",
+        what: "If the transaction is not covered by §381, do not use the §381 method succession answer.",
+        model: "Identify the actual transaction form and route through stock, asset, §338, §351, or another applicable path.",
+        rule: "§381 applies only to specified acquisitions, including certain §332 liquidations and certain §368 reorganizations.",
+        point: "Eligibility comes first. The method succession rules do not apply just because the transaction is called a reorganization.",
+        checks: [
+          "What specific Code provision governs the transaction?",
+          "Is the transaction excluded from §381 treatment?",
+          "Should the transaction instead be analyzed as stock, asset, §338, or §351?"
+        ]
+      },
+      section381: {
+        title: "§381 tells you which method survives.",
+        what: "This is not a free method reset. The acquirer follows carryover and principal-method rules.",
+        model: "Same methods, different methods, separate businesses, integrated businesses, inventory methods, and §481(a).",
+        rule: "§381(c)(4) and §381(c)(5).",
+        point: "The answer comes from the §381 method matrix, not from buyer preference.",
+        checks: [
+          "Are the businesses separate or integrated after the transaction?",
+          "Do the parties use the same methods, different methods, or different inventory methods?",
+          "Are any inherited or continued methods impermissible?"
+        ]
+      },
+      consolidatedGroup: {
+        title: "Short-year and allocation rules may control timing.",
+        what: "A consolidated group entry or exit can close the tax year and move income or deductions between periods.",
+        model: "Closing-of-the-books, ratable allocation, extraordinary items, deferred revenue, prepaids, compensation, and §481(a).",
+        rule: "Reg. §1.1502-76. Short periods are treated as taxable years for many method purposes.",
+        point: "This does not necessarily change the method, but it can change when the method result is taken into account.",
+        checks: [
+          "Did the target enter or leave a consolidated group?",
+          "Will items be allocated by closing of the books or ratable allocation?",
+          "Are any §481(a) adjustments or other extraordinary items present?"
+        ]
+      },
+      notSure: {
+        title: "Start by identifying the taxpayer and transaction form.",
+        what: "The method answer depends on both who is being analyzed and what transaction occurred.",
+        model: "Party role, transaction form, elections, consolidated group status, and item-specific issues.",
+        rule: "No single rule applies until the transaction path is identified.",
+        point: "Gather the deal documents first, then rerun the tool using the correct party and transaction form.",
+        checks: [
+          "Who is the taxpayer: buyer, seller, target, old target, new target, transferor, transferee, or acquirer?",
+          "Was the transaction stock, assets, §338, §351, §381, or something else?",
+          "Were any elections made, and did the target enter or leave a consolidated group?"
+        ]
+      }
+    };
+
+    const steps = {
+      start: {
+        eyebrow: "Question 1",
+        question: "Whose method consequence are you analyzing?",
+        help: "Pick the party or entity whose accounting method result you need. This avoids mixing buyer, seller, target, old target, new target, and acquirer consequences.",
+        choices: [
+          { label: "Buyer / acquirer", note: "The taxpayer bought stock or assets, or acquired a business.", next: "buyerTransaction" },
+          { label: "Seller / transferor", note: "The taxpayer sold stock or assets, or transferred property.", next: "sellerTransaction" },
+          { label: "Target / old target / new target", note: "You are analyzing the target entity itself, especially in a stock or §338 transaction.", next: "targetTransaction" },
+          { label: "Consolidated group", note: "You are focused on group entry, exit, short years, or allocation.", result: "consolidatedGroup" },
+          { label: "Not sure", note: "You need to identify the party and transaction form first.", result: "notSure" }
+        ]
+      },
+      buyerTransaction: {
+        eyebrow: "Question 2",
+        question: "What did the buyer or acquirer receive?",
+        help: "The method answer usually turns on stock, assets, §338 treatment, §351, or §381 succession.",
+        choices: [
+          { label: "Stock", note: "The legal target corporation continues.", next: "buyerStockElection" },
+          { label: "Assets", note: "The buyer acquired assets directly.", result: "buyerAssets" },
+          { label: "Property in §351 transfer", note: "The taxpayer is the transferee corporation.", result: "transferee351" },
+          { label: "Business in reorganization or liquidation", note: "A §381 transaction may apply.", next: "section381Eligibility" }
+        ]
+      },
+      buyerStockElection: {
+        eyebrow: "Question 3",
+        question: "Was there a §338(h)(10) election?",
+        help: "A stock purchase with a valid §338(h)(10) election is treated as a deemed asset purchase for federal income tax purposes.",
+        choices: [
+          { label: "Yes", note: "Analyze new target’s method adoption and old target’s sale-side triggers separately.", next: "targetSide338" },
+          { label: "No", note: "The same target corporation continues.", result: "buyerStock" }
+        ]
+      },
+      targetSide338: {
+        eyebrow: "Question 4",
+        question: "Which §338(h)(10) side are you analyzing?",
+        help: "Old target and new target have different method consequences.",
+        choices: [
+          { label: "New target / buyer side", note: "The deemed purchaser of the assets.", result: "newTarget338" },
+          { label: "Old target / seller side", note: "The deemed seller of the assets.", result: "oldTarget338" }
+        ]
+      },
+      sellerTransaction: {
+        eyebrow: "Question 2",
+        question: "What did the seller or transferor do?",
+        help: "Choose the transaction from the seller or transferor side.",
+        choices: [
+          { label: "Sold stock", note: "The seller sold stock of the target corporation.", result: "sellerStock" },
+          { label: "Sold assets", note: "The seller sold business assets.", result: "sellerAssets" },
+          { label: "Transferred property in §351", note: "The taxpayer contributed property to a corporation.", result: "transferor351" },
+          { label: "Old target in §338(h)(10)", note: "The target is treated as selling assets.", result: "oldTarget338" }
+        ]
+      },
+      targetTransaction: {
+        eyebrow: "Question 2",
+        question: "Which target posture applies?",
+        help: "Target consequences depend on whether the target continues, becomes old target in §338, or is treated as new target.",
+        choices: [
+          { label: "Target continues after stock purchase", note: "No §338(h)(10) election.", result: "buyerStock" },
+          { label: "Old target in §338(h)(10)", note: "The deemed seller of the assets.", result: "oldTarget338" },
+          { label: "New target in §338(h)(10)", note: "The deemed buyer of the assets.", result: "newTarget338" },
+          { label: "Target enters or leaves consolidated group", note: "Short-year and allocation rules may apply.", result: "consolidatedGroup" }
+        ]
+      },
+      section381Eligibility: {
+        eyebrow: "Question 3",
+        question: "Is the transaction covered by §381?",
+        help: "Do not assume §381 applies to every reorganization. Eligibility must be confirmed before using the §381 method succession answer.",
+        choices: [
+          { label: "Yes", note: "The transaction is within §381(a).", result: "section381" },
+          { label: "No / not confirmed", note: "Route through the actual transaction form instead.", result: "section381NotCovered" }
+        ]
+      }
+    };
+
+    let currentStep = "start";
+    let path = [];
+    let showingResult = false;
+
+    const progress = document.getElementById("progress");
+    const historyEl = document.getElementById("history");
+    const eyebrow = document.getElementById("eyebrow");
+    const questionText = document.getElementById("questionText");
+    const helpText = document.getElementById("helpText");
+    const choicesEl = document.getElementById("choices");
+    const resultEl = document.getElementById("result");
+    const resultTitle = document.getElementById("resultTitle");
+    const whatHappens = document.getElementById("whatHappens");
+    const whatToModel = document.getElementById("whatToModel");
+    const rule = document.getElementById("rule");
+    const practicalPoint = document.getElementById("practicalPoint");
+    const checkNext = document.getElementById("checkNext");
+    const backBtn = document.getElementById("backBtn");
+    const restartBtn = document.getElementById("restartBtn");
+
+    function renderStep() {
+      const step = steps[currentStep];
+      showingResult = false;
+      resultEl.classList.remove("visible");
+      eyebrow.textContent = step.eyebrow;
+      questionText.textContent = step.question;
+      helpText.textContent = step.help;
+      progress.textContent = step.eyebrow;
+      choicesEl.style.display = "grid";
+      choicesEl.innerHTML = "";
+      renderHistory();
+
+      step.choices.forEach(choice => {
+        const button = document.createElement("button");
+        button.className = "choice";
+        button.innerHTML = `<span class="choice-title">${choice.label}</span><span class="choice-note">${choice.note}</span>`;
+        button.addEventListener("click", () => {
+          path.push({ step: currentStep, label: choice.label, next: choice.next || null, result: choice.result || null });
+          if (choice.result) {
+            renderResult(choice.result);
+          } else {
+            currentStep = choice.next;
+            renderStep();
+          }
+        });
+        choicesEl.appendChild(button);
+      });
+    }
+
+    function renderHistory() {
+      historyEl.innerHTML = "";
+      path.forEach(item => {
+        const crumb = document.createElement("span");
+        crumb.className = "crumb";
+        crumb.textContent = item.label;
+        historyEl.appendChild(crumb);
+      });
+    }
+
+    function renderResult(key) {
+      const answer = answers[key];
+      showingResult = true;
+      progress.textContent = "Answer";
+      choicesEl.style.display = "none";
+      resultTitle.textContent = answer.title;
+      whatHappens.textContent = answer.what;
+      whatToModel.textContent = answer.model;
+      rule.textContent = answer.rule;
+      practicalPoint.textContent = answer.point;
+      checkNext.innerHTML = "";
+      answer.checks.forEach(check => {
+        const li = document.createElement("li");
+        li.textContent = check;
+        checkNext.appendChild(li);
+      });
+      resultEl.classList.add("visible");
+      renderHistory();
+    }
+
+    function rebuildToLastStep() {
+      currentStep = "start";
+      path.forEach(item => {
+        if (item.next) currentStep = item.next;
+      });
+    }
+
+    function goBack() {
+      if (!path.length) return;
+      path.pop();
+      rebuildToLastStep();
+      renderStep();
+    }
+
+    function restart() {
+      currentStep = "start";
+      path = [];
+      showingResult = false;
+      renderStep();
+    }
+
+    backBtn.addEventListener("click", goBack);
+    restartBtn.addEventListener("click", restart);
+
+    renderStep();
+  </script>
+</body>
+</html>
