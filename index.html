@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+-<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -240,7 +240,7 @@
 
   <section class="foyer" id="foyer">
     <div class="foyer-card">
-      <div class="acronym-top">Eisner Advisory Group LLC · National Tax Office · Accounting Methods &amp; Periods</div>
+      <div class="acronym-top">Eisner Advisory Group LLC Â· National Tax Office Â· Accounting Methods &amp; Periods</div>
 
       <div class="foyer-screen" id="introScreen">
         <div class="hello">
@@ -263,6 +263,7 @@
           <p>The Method Succession Navigator identifies general accounting method consequences based on the party and transaction structure selected.</p>
           <p>The tool addresses stock and asset transactions, Section 338(h)(10) elections, Section 351 transfers, Section 381 transactions, and consolidated group entries and exits.</p>
           <p>This is a screening tool. Confirm the transaction documents, accounting method history, elections, procedural requirements, and current authority before using any result.</p>
+          <p>Developed by <a href="mailto:jaime.garciadeparedes@eisneramper.com">Jaime Garcia de Paredes</a> and <a href="mailto:briauna.williams-henderson@eisneramper.com">Briauna Williams-Henderson</a>.</p>
         </div>
         <div class="bottom">
           <button class="secondary" type="button" onclick="showIntro()">Back</button>
@@ -385,20 +386,20 @@
       sellerStock: {
         group: "Stock transactions",
         transaction: "Seller, taxable stock sale",
-        rule: "§1001",
+        rule: "Â§1001",
         title: "Pre-sale methods carry over.",
         methodResult: "Pre-sale accounting methods and taxable years generally carry over.",
-        taxEffect: "No termination of the business and no §381 transaction. Seller issues are pre-transaction method changes and any short-year effects.",
+        taxEffect: "No termination of the business and no Â§381 transaction. Seller issues are pre-transaction method changes and any short-year effects.",
         checks: [
           "Should target file Form 3115 before diligence or closing to correct or optimize a method?",
           "Does the stock sale create a short tax year?",
-          "Does the short year affect deferred revenue, deferred compensation, prepaids, or §481(a)?"
+          "Does the short year affect deferred revenue, deferred compensation, prepaids, or Â§481(a)?"
         ]
       },
       buyerStock: {
         group: "Stock transactions",
         transaction: "Buyer, taxable stock purchase",
-        rule: "§1012; §446(e)",
+        rule: "Â§1012; Â§446(e)",
         title: "Target methods continue.",
         methodResult: "Methods used by the target before the sale generally continue after the sale.",
         taxEffect: "Buyer may request method changes after closing for audit protection, group conformity, or more favorable timing. Consent generally is required.",
@@ -411,7 +412,7 @@
       sellerAssets: {
         group: "Asset transactions",
         transaction: "Seller, taxable asset sale",
-        rule: "§1001; §1060",
+        rule: "Â§1001; Â§1060",
         title: "Sale can trigger method items.",
         methodResult: "Seller computes gain asset by asset; transferred obligations can accelerate income or affect deductions.",
         taxEffect: "Deferred revenue generally accelerates if seller is relieved of performance. Assumed liabilities and long-term contracts require separate timing analysis.",
@@ -424,7 +425,7 @@
       buyerAssets: {
         group: "Asset transactions",
         transaction: "Buyer, taxable asset purchase",
-        rule: "§1060",
+        rule: "Â§1060",
         title: "Buyer adopts methods for acquired assets.",
         methodResult: "Buyer generally applies its own permissible methods to purchased assets going forward.",
         taxEffect: "Opening basis, assumed liabilities, inventory, depreciation, and deferred revenue obligations determine the tax setup.",
@@ -435,48 +436,48 @@
         ]
       },
       oldTarget338: {
-        group: "§338(h)(10)",
-        transaction: "Old target, §338(h)(10)",
-        rule: "§338(h)(10)",
+        group: "Â§338(h)(10)",
+        transaction: "Old target, Â§338(h)(10)",
+        rule: "Â§338(h)(10)",
         title: "Old target is treated as selling assets.",
         methodResult: "Old target has deemed asset sale and liquidation consequences.",
-        taxEffect: "Deferred revenue may accelerate. Assumed liabilities, long-term contracts, gain or loss, and seller-side §481(a) must be modeled.",
+        taxEffect: "Deferred revenue may accelerate. Assumed liabilities, long-term contracts, gain or loss, and seller-side Â§481(a) must be modeled.",
         checks: [
           "Does old target have deferred revenue or advance payments?",
           "Are liabilities or long-term contracts assumed by new target?",
-          "Does the deemed sale or liquidation accelerate any §481(a) adjustment?"
+          "Does the deemed sale or liquidation accelerate any Â§481(a) adjustment?"
         ]
       },
       newTarget338: {
-        group: "§338(h)(10)",
-        transaction: "New target, §338(h)(10)",
-        rule: "§338(h)(10)",
+        group: "Â§338(h)(10)",
+        transaction: "New target, Â§338(h)(10)",
+        rule: "Â§338(h)(10)",
         title: "New target may adopt methods.",
-        methodResult: "New target may adopt any taxable year and any accounting method that meets §§441 and 446, without prior consent.",
+        methodResult: "New target may adopt any taxable year and any accounting method that meets Â§Â§441 and 446, without prior consent.",
         taxEffect: "This creates method-planning opportunities for gross receipts methods, depreciation, inventory, and deferred revenue obligations.",
         checks: [
-          "Was the §338(h)(10) election valid?",
+          "Was the Â§338(h)(10) election valid?",
           "What methods should new target adopt for revenue, inventory, depreciation, and capitalization?",
           "Does new target assume deferred revenue obligations or liabilities?"
         ]
       },
       transferor351: {
-        group: "§351 transfers",
-        transaction: "Transferor, §351",
-        rule: "§351",
+        group: "Â§351 transfers",
+        transaction: "Transferor, Â§351",
+        rule: "Â§351",
         title: "Nonrecognition can still trigger method items.",
-        methodResult: "Transferor may accelerate deferred revenue, lose deductions, or accelerate positive §481(a).",
-        taxEffect: "§351 nonrecognition does not answer method timing. Final-year Form 3115 limits and transferred obligations matter.",
+        methodResult: "Transferor may accelerate deferred revenue, lose deductions, or accelerate positive Â§481(a).",
+        taxEffect: "Â§351 nonrecognition does not answer method timing. Final-year Form 3115 limits and transferred obligations matter.",
         checks: [
           "Does the transfer shift deferred revenue performance obligations?",
           "Does transferor cease the trade or business or transfer substantially all assets?",
-          "Are there existing positive §481(a) adjustments or final-year method-change limits?"
+          "Are there existing positive Â§481(a) adjustments or final-year method-change limits?"
         ]
       },
       transferee351: {
-        group: "§351 transfers",
-        transaction: "Transferee, §351",
-        rule: "§351; §446",
+        group: "Â§351 transfers",
+        transaction: "Transferee, Â§351",
+        rule: "Â§351; Â§446",
         title: "Methods generally do not carry over.",
         methodResult: "Transferee generally may adopt permissible methods, but steps into the shoes of transferor for specified items.",
         taxEffect: "Carryover basis, liabilities, LIFO inventories, long-term contracts, depreciation, amortization, supplies, and prepaids can override the general adoption answer.",
@@ -487,42 +488,42 @@
         ]
       },
       section381: {
-        group: "§381 and consolidated groups",
-        transaction: "Acquirer, §381 transaction",
-        rule: "§381(c)(4), (5)",
-        title: "§381 method succession rules apply.",
-        methodResult: "Acquirer succeeds to methods or applies principal-method rules under §381.",
-        taxEffect: "Same-method, different-method, separate-business, integrated-business, inventory, and §481(a) rules determine the result.",
+        group: "Â§381 and consolidated groups",
+        transaction: "Acquirer, Â§381 transaction",
+        rule: "Â§381(c)(4), (5)",
+        title: "Â§381 method succession rules apply.",
+        methodResult: "Acquirer succeeds to methods or applies principal-method rules under Â§381.",
+        taxEffect: "Same-method, different-method, separate-business, integrated-business, inventory, and Â§481(a) rules determine the result.",
         checks: [
-          "Is the transaction actually described in §381(a)?",
+          "Is the transaction actually described in Â§381(a)?",
           "Are the businesses separate or integrated after the transaction?",
           "Do the parties use the same method, different methods, or different inventory methods?"
         ]
       },
       section381NotCovered: {
-        group: "§381 and consolidated groups",
-        transaction: "§381 not confirmed",
-        rule: "§381",
-        title: "§381 succession rules do not apply unless eligible.",
-        methodResult: "§381 succession rules do not apply unless eligible.",
-        taxEffect: "If §381 does not apply, route through the actual transaction form instead.",
+        group: "Â§381 and consolidated groups",
+        transaction: "Â§381 not confirmed",
+        rule: "Â§381",
+        title: "Â§381 succession rules do not apply unless eligible.",
+        methodResult: "Â§381 succession rules do not apply unless eligible.",
+        taxEffect: "If Â§381 does not apply, route through the actual transaction form instead.",
         checks: [
           "What Code provision governs the transaction?",
-          "Is the transaction excluded from §381?",
-          "Should the transaction be analyzed as stock, asset, §338, or §351?"
+          "Is the transaction excluded from Â§381?",
+          "Should the transaction be analyzed as stock, asset, Â§338, or Â§351?"
         ]
       },
       consolidatedGroup: {
-        group: "§381 and consolidated groups",
+        group: "Â§381 and consolidated groups",
         transaction: "Consolidated group entry or exit",
-        rule: "Reg. §1.1502-76",
+        rule: "Reg. Â§1.1502-76",
         title: "Short periods affect timing and allocation.",
-        methodResult: "Methods may continue, but short-period rules allocate income, deductions, and §481(a).",
-        taxEffect: "Closing-of-the-books or ratable allocation applies. §481(a) is an extraordinary item and is specifically allocated.",
+        methodResult: "Methods may continue, but short-period rules allocate income, deductions, and Â§481(a).",
+        taxEffect: "Closing-of-the-books or ratable allocation applies. Â§481(a) is an extraordinary item and is specifically allocated.",
         checks: [
           "Did target enter or leave a consolidated group?",
           "Will items be allocated by closing of the books or ratable allocation?",
-          "Are deferred revenue, prepaids, compensation, or §481(a) affected by the short year?"
+          "Are deferred revenue, prepaids, compensation, or Â§481(a) affected by the short year?"
         ]
       },
       notSure: {
@@ -534,7 +535,7 @@
         taxEffect: "No method answer is reliable until the party, transaction form, and elections are known.",
         checks: [
           "Who is the taxpayer?",
-          "Was the transaction stock, assets, §338, §351, §381, or something else?",
+          "Was the transaction stock, assets, Â§338, Â§351, Â§381, or something else?",
           "Were any elections made or consolidated group changes triggered?"
         ]
       }
@@ -560,23 +561,23 @@
         choices: [
           { label: "Stock", note: "The legal target corporation continues.", next: "buyerStockElection" },
           { label: "Assets", note: "The buyer acquired assets directly.", result: "buyerAssets" },
-          { label: "Property in §351 transfer", note: "The taxpayer is the transferee corporation.", result: "transferee351" },
-          { label: "Business in reorganization or liquidation", note: "A §381 transaction may apply.", next: "section381Eligibility" }
+          { label: "Property in Â§351 transfer", note: "The taxpayer is the transferee corporation.", result: "transferee351" },
+          { label: "Business in reorganization or liquidation", note: "A Â§381 transaction may apply.", next: "section381Eligibility" }
         ]
       },
       buyerStockElection: {
         eyebrow: "Question 3",
-        question: "Was there a valid §338(h)(10) election?",
+        question: "Was there a valid Â§338(h)(10) election?",
         help: "If yes, old target and new target must be analyzed separately.",
         choices: [
           { label: "Yes", note: "Analyze old target and new target separately.", next: "targetSide338" },
           { label: "No", note: "The same target corporation continues.", result: "buyerStock" },
-          { label: "Not confirmed", note: "Do not use the §338 method answer until eligibility is confirmed.", result: "section381NotCovered" }
+          { label: "Not confirmed", note: "Do not use the Â§338 method answer until eligibility is confirmed.", result: "section381NotCovered" }
         ]
       },
       targetSide338: {
         eyebrow: "Question 4",
-        question: "Which §338(h)(10) side are you analyzing?",
+        question: "Which Â§338(h)(10) side are you analyzing?",
         help: "Old target and new target have different method consequences.",
         choices: [
           { label: "New target / buyer side", note: "The deemed buyer of the assets.", result: "newTarget338" },
@@ -590,27 +591,27 @@
         choices: [
           { label: "Sold stock", note: "The seller sold stock of the target corporation.", result: "sellerStock" },
           { label: "Sold assets", note: "The seller sold business assets.", result: "sellerAssets" },
-          { label: "Transferred property in §351", note: "The taxpayer contributed property to a corporation.", result: "transferor351" },
-          { label: "Old target in §338(h)(10)", note: "The target is treated as selling assets.", result: "oldTarget338" }
+          { label: "Transferred property in Â§351", note: "The taxpayer contributed property to a corporation.", result: "transferor351" },
+          { label: "Old target in Â§338(h)(10)", note: "The target is treated as selling assets.", result: "oldTarget338" }
         ]
       },
       targetTransaction: {
         eyebrow: "Question 2",
         question: "Which target posture applies?",
-        help: "Choose the target’s posture.",
+        help: "Choose the targetâ€™s posture.",
         choices: [
-          { label: "Target continues after stock purchase", note: "No §338(h)(10) election.", result: "buyerStock" },
-          { label: "Old target in §338(h)(10)", note: "The deemed seller of the assets.", result: "oldTarget338" },
-          { label: "New target in §338(h)(10)", note: "The deemed buyer of the assets.", result: "newTarget338" },
+          { label: "Target continues after stock purchase", note: "No Â§338(h)(10) election.", result: "buyerStock" },
+          { label: "Old target in Â§338(h)(10)", note: "The deemed seller of the assets.", result: "oldTarget338" },
+          { label: "New target in Â§338(h)(10)", note: "The deemed buyer of the assets.", result: "newTarget338" },
           { label: "Target enters or leaves consolidated group", note: "Short-year and allocation rules may apply.", result: "consolidatedGroup" }
         ]
       },
       section381Eligibility: {
         eyebrow: "Question 3",
-        question: "Is the transaction covered by §381?",
-        help: "Do not assume §381 applies to every reorganization.",
+        question: "Is the transaction covered by Â§381?",
+        help: "Do not assume Â§381 applies to every reorganization.",
         choices: [
-          { label: "Yes", note: "The transaction is within §381(a).", result: "section381" },
+          { label: "Yes", note: "The transaction is within Â§381(a).", result: "section381" },
           { label: "No / not confirmed", note: "Route through the actual transaction form instead.", result: "section381NotCovered" }
         ]
       }
